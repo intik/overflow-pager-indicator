@@ -1,5 +1,8 @@
 # Overflow Pager Indicator widget
 
+[![Download](https://api.bintray.com/packages/intik/cz.intik/overflowpagerindicator/images/download.svg)](https://bintray.com/intik/cz.intik/overflowpagerindicator/_latestVersion)
+[![license](https://img.shields.io/badge/license-MIT%20license-blue.svg)](https://github.com/intik/overflow-pager-indicator/blob/master/LICENSE)
+
 Overflow Pager Indicator is a simple widget for recycler view - displaying dots indicators of 
 currently selected page - with some fancy animation when dataset is large.
 
