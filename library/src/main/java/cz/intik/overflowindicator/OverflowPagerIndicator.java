@@ -116,7 +116,7 @@ public class OverflowPagerIndicator extends LinearLayout {
 	}
 
 	private void updateOverflowState(int position) {
-		if (mIndicatorCount == 0) {
+		if (mIndicatorCount == 0 || position > mIndicatorCount) {
 			return;
 		}
 
