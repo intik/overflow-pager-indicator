@@ -120,6 +120,10 @@ public class OverflowPagerIndicator extends LinearLayout {
 			return;
 		}
 
+		if(position < 0){
+			return;
+		}
+
 		Transition transition = new TransitionSet()
 				.setOrdering(TransitionSet.ORDERING_TOGETHER)
 				.addTransition(new ChangeBounds())
