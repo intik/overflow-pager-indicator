@@ -120,7 +120,7 @@ public class OverflowPagerIndicator extends LinearLayout {
 			return;
 		}
 
-		if(position < 0){
+		if(position < 0 || position > mIndicatorCount){
 			return;
 		}
 
