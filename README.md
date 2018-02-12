@@ -88,3 +88,7 @@ or even some custom logic which will call:
 ```java
 OverflowPagerIndicator#onPageSelected(int position)
 ```
+
+### Changelog
+
+1.2.1 bugfix (thanks [Sajad Abasi](https://github.com/sajadabasi))

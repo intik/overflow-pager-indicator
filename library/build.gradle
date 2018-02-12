@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 ext {
     PUBLISH_GROUP_ID = 'cz.intik'
     PUBLISH_ARTIFACT_ID = 'overflow-pager-indicator'
-    PUBLISH_VERSION = '1.2'
+    PUBLISH_VERSION = '1.2.1'
 
     // gradlew clean build generateRelease
 }
