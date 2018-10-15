@@ -1,8 +1,8 @@
 package cz.intik.overflowindicator;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.PagerSnapHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * SnapHelper which allows snapping of pages, customized with notifying of {@link OverflowPagerIndicator}

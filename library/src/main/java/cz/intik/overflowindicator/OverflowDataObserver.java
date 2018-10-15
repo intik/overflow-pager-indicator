@@ -1,6 +1,6 @@
 package cz.intik.overflowindicator;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Data observer which notifies {@link OverflowPagerIndicator} of changed data
