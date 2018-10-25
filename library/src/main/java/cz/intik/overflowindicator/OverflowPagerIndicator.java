@@ -1,22 +1,26 @@
 package cz.intik.overflowindicator;
 
 import android.content.Context;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
+import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.transition.ChangeBounds;
+import android.transition.Fade;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import com.transitionseverywhere.ChangeBounds;
-import com.transitionseverywhere.Fade;
-import com.transitionseverywhere.Transition;
-import com.transitionseverywhere.TransitionManager;
-import com.transitionseverywhere.TransitionSet;
-
 import java.util.Arrays;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Pager indicator widget
@@ -26,200 +30,234 @@ import java.util.Arrays;
  * or with custom logic which calls {@link #onPageSelected(int)}
  *
  * @author Petr Introvic <introvic.petr@gmail.com>
- *         created 07.06.2017.
+ * created 07.06.2017.
  */
 public class OverflowPagerIndicator extends LinearLayout {
-	private static final int MAX_INDICATORS       = 9;
-	private static final int INDICATOR_SIZE_DIP   = 12;
-	private static final int INDICATOR_MARGIN_DIP = 2;
+    private static final int MAX_INDICATORS = 9;
+    private static final int INDICATOR_SIZE_DIP = 12;
+    private static final int INDICATOR_MARGIN_DIP = 2;
 
-	// State also represents indicator scale factor
-	private static final float STATE_GONE     = 0;
-	private static final float STATE_SMALLEST = 0.2f;
-	private static final float STATE_SMALL    = 0.4f;
-	private static final float STATE_NORMAL   = 0.6f;
-	private static final float STATE_SELECTED = 1.0f;
+    // State also represents indicator scale factor
+    private static final float STATE_GONE = 0;
+    private static final float STATE_SMALLEST = 0.2f;
+    private static final float STATE_SMALL = 0.4f;
+    private static final float STATE_NORMAL = 0.6f;
+    private static final float STATE_SELECTED = 1.0f;
 
-	private int mIndicatorCount;
-	private int mLastSelected;
-	private int mIndicatorSize;
-	private int mIndicatorMargin;
+    private int mIndicatorCount;
+    private int mLastSelected;
+    private int mIndicatorSize;
+    private int mIndicatorMargin;
 
-	private RecyclerView         mRecyclerView;
-	private OverflowDataObserver mDataObserver;
+    private RecyclerView mRecyclerView;
+    private OverflowDataObserver mDataObserver;
 
-	public OverflowPagerIndicator(Context context, AttributeSet attrs) {
-		super(context, attrs);
+    private int dotStrokeColor;
+    private int dotFillColor;
 
-		DisplayMetrics dm = getResources().getDisplayMetrics();
-		mIndicatorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_SIZE_DIP, dm);
-		mIndicatorMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_MARGIN_DIP, dm);
+    public OverflowPagerIndicator(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initAttrs(context, attrs);
 
-		mDataObserver = new OverflowDataObserver(this);
-	}
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        mIndicatorSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_SIZE_DIP, dm);
+        mIndicatorMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, INDICATOR_MARGIN_DIP, dm);
 
-	@Override
-	protected void onDetachedFromWindow() {
-		if (mRecyclerView != null) {
-			try {
-				mRecyclerView.getAdapter().unregisterAdapterDataObserver(mDataObserver);
-			} catch (IllegalStateException ise) {
-				// Do nothing
-			}
-		}
+        mDataObserver = new OverflowDataObserver(this);
+    }
 
-		super.onDetachedFromWindow();
-	}
+    private void initAttrs(Context context, AttributeSet attrs) {
+        dotFillColor = ContextCompat.getColor(context, R.color.dot_fill);
+        dotStrokeColor = ContextCompat.getColor(context, R.color.dot_stroke);
 
-	/**
-	 * @param position Page to be selected
-	 */
-	public void onPageSelected(int position) {
-		if (mIndicatorCount > MAX_INDICATORS) {
-			updateOverflowState(position);
-		} else {
-			updateSimpleState(position);
-		}
-	}
+        if (attrs != null) {
+            TypedArray attributeArray = context.obtainStyledAttributes(attrs, R.styleable.OverflowPagerIndicator);
 
-	/**
-	 * @param recyclerView Target recycler view
-	 */
-	public void attachToRecyclerView(final RecyclerView recyclerView) {
-		mRecyclerView = recyclerView;
-		mRecyclerView.getAdapter().registerAdapterDataObserver(mDataObserver);
+            if (attributeArray != null) {
+                if (attributeArray.hasValue(R.styleable.OverflowPagerIndicator_dotFillColor)) {
+                    dotFillColor = attributeArray.getColor(R.styleable.OverflowPagerIndicator_dotFillColor, dotFillColor);
+                }
 
-		initIndicators();
-	}
+                if (attributeArray.hasValue(R.styleable.OverflowPagerIndicator_dotStrokeColor)) {
+                    dotStrokeColor = attributeArray.getColor(R.styleable.OverflowPagerIndicator_dotStrokeColor, dotStrokeColor);
+                }
 
-	void updateIndicatorsCount() {
-		if (mIndicatorCount != mRecyclerView.getAdapter().getItemCount()) {
-			initIndicators();
-		}
-	}
+                attributeArray.recycle();
+            }
+        }
+    }
 
-	private void initIndicators() {
-		mLastSelected = -1;
-		mIndicatorCount = mRecyclerView.getAdapter().getItemCount();
-		createIndicators(mIndicatorSize, mIndicatorMargin);
-		onPageSelected(0);
-	}
+    @Override
+    protected void onDetachedFromWindow() {
+        if (mRecyclerView != null) {
+            try {
+                mRecyclerView.getAdapter().unregisterAdapterDataObserver(mDataObserver);
+            } catch (IllegalStateException ise) {
+                // Do nothing
+            }
+        }
 
-	private void updateSimpleState(int position) {
-		if (mLastSelected != -1) {
-			animateViewScale(getChildAt(mLastSelected), STATE_NORMAL);
-		}
+        super.onDetachedFromWindow();
+    }
 
-		animateViewScale(getChildAt(position), STATE_SELECTED);
+    /**
+     * @param position Page to be selected
+     */
+    public void onPageSelected(int position) {
+        if (mIndicatorCount > MAX_INDICATORS) {
+            updateOverflowState(position);
+        } else {
+            updateSimpleState(position);
+        }
+    }
 
-		mLastSelected = position;
-	}
+    /**
+     * @param recyclerView Target recycler view
+     */
+    public void attachToRecyclerView(final RecyclerView recyclerView) {
+        mRecyclerView = recyclerView;
+        mRecyclerView.getAdapter().registerAdapterDataObserver(mDataObserver);
 
-	private void updateOverflowState(int position) {
-		if (mIndicatorCount == 0) {
-			return;
-		}
+        initIndicators();
+    }
 
-		if(position < 0 || position > mIndicatorCount){
-			return;
-		}
+    void updateIndicatorsCount() {
+        if (mIndicatorCount != mRecyclerView.getAdapter().getItemCount()) {
+            initIndicators();
+        }
+    }
 
-		Transition transition = new TransitionSet()
-				.setOrdering(TransitionSet.ORDERING_TOGETHER)
-				.addTransition(new ChangeBounds())
-				.addTransition(new Fade());
+    private void initIndicators() {
+        mLastSelected = -1;
+        mIndicatorCount = mRecyclerView.getAdapter().getItemCount();
+        createIndicators(mIndicatorSize, mIndicatorMargin);
+        onPageSelected(0);
+    }
 
-		TransitionManager.beginDelayedTransition(this, transition);
+    private void updateSimpleState(int position) {
+        if (mLastSelected != -1) {
+            animateViewScale(getChildAt(mLastSelected), STATE_NORMAL);
+        }
 
-		float[] positionStates = new float[mIndicatorCount + 1];
-		Arrays.fill(positionStates, STATE_GONE);
+        animateViewScale(getChildAt(position), STATE_SELECTED);
 
-		int start     = position - MAX_INDICATORS + 4;
-		int realStart = Math.max(0, start);
+        mLastSelected = position;
+    }
 
-		if (realStart + MAX_INDICATORS > mIndicatorCount) {
-			realStart = mIndicatorCount - MAX_INDICATORS;
-			positionStates[mIndicatorCount - 1] = STATE_NORMAL;
-			positionStates[mIndicatorCount - 2] = STATE_NORMAL;
-		} else {
-			if (realStart + MAX_INDICATORS - 2 < mIndicatorCount) {
-				positionStates[realStart + MAX_INDICATORS - 2] = STATE_SMALL;
-			}
-			if (realStart + MAX_INDICATORS - 1 < mIndicatorCount) {
-				positionStates[realStart + MAX_INDICATORS - 1] = STATE_SMALLEST;
-			}
-		}
+    private void updateOverflowState(int position) {
+        if (mIndicatorCount == 0) {
+            return;
+        }
 
-		for (int i = realStart; i < realStart + MAX_INDICATORS - 2; i++) {
-			positionStates[i] = STATE_NORMAL;
-		}
+        if (position < 0 || position > mIndicatorCount) {
+            return;
+        }
 
-		if (position > 5) {
-			positionStates[realStart] = STATE_SMALLEST;
-			positionStates[realStart + 1] = STATE_SMALL;
-		} else if (position == 5) {
-			positionStates[realStart] = STATE_SMALL;
-		}
+        Transition transition = new TransitionSet()
+                .setOrdering(TransitionSet.ORDERING_TOGETHER)
+                .addTransition(new ChangeBounds())
+                .addTransition(new Fade());
 
-		positionStates[position] = STATE_SELECTED;
+        TransitionManager.beginDelayedTransition(this, transition);
 
-		updateIndicators(positionStates);
+        float[] positionStates = new float[mIndicatorCount + 1];
+        Arrays.fill(positionStates, STATE_GONE);
 
-		mLastSelected = position;
-	}
+        int start = position - MAX_INDICATORS + 4;
+        int realStart = Math.max(0, start);
 
-	private void updateIndicators(float[] positionStates) {
-		for (int i = 0; i < mIndicatorCount; i++) {
-			View  v     = getChildAt(i);
-			float state = positionStates[i];
+        if (realStart + MAX_INDICATORS > mIndicatorCount) {
+            realStart = mIndicatorCount - MAX_INDICATORS;
+            positionStates[mIndicatorCount - 1] = STATE_NORMAL;
+            positionStates[mIndicatorCount - 2] = STATE_NORMAL;
+        } else {
+            if (realStart + MAX_INDICATORS - 2 < mIndicatorCount) {
+                positionStates[realStart + MAX_INDICATORS - 2] = STATE_SMALL;
+            }
+            if (realStart + MAX_INDICATORS - 1 < mIndicatorCount) {
+                positionStates[realStart + MAX_INDICATORS - 1] = STATE_SMALLEST;
+            }
+        }
 
-			if (state == STATE_GONE) {
-				v.setVisibility(GONE);
+        for (int i = realStart; i < realStart + MAX_INDICATORS - 2; i++) {
+            positionStates[i] = STATE_NORMAL;
+        }
 
-			} else {
-				v.setVisibility(VISIBLE);
-				animateViewScale(v, state);
-			}
+        if (position > 5) {
+            positionStates[realStart] = STATE_SMALLEST;
+            positionStates[realStart + 1] = STATE_SMALL;
+        } else if (position == 5) {
+            positionStates[realStart] = STATE_SMALL;
+        }
 
-		}
-	}
+        positionStates[position] = STATE_SELECTED;
 
-	private void createIndicators(int indicatorSize, int margin) {
-		removeAllViews();
+        updateIndicators(positionStates);
 
-		if (mIndicatorCount <= 1) {
-			return;
-		}
+        mLastSelected = position;
+    }
 
-		for (int i = 0; i < mIndicatorCount; i++) {
-			addIndicator(mIndicatorCount > MAX_INDICATORS, indicatorSize, margin);
-		}
-	}
+    private void updateIndicators(float[] positionStates) {
+        for (int i = 0; i < mIndicatorCount; i++) {
+            View v = getChildAt(i);
+            float state = positionStates[i];
 
-	private void addIndicator(boolean isOverflowState, int indicatorSize, int margin) {
-		View view = new View(getContext());
-		view.setBackgroundResource(R.drawable.dot);
-		if (isOverflowState) {
-			animateViewScale(view, STATE_SMALLEST);
-		} else {
-			animateViewScale(view, STATE_NORMAL);
-		}
+            if (state == STATE_GONE) {
+                v.setVisibility(GONE);
 
-		MarginLayoutParams params = new MarginLayoutParams(indicatorSize, indicatorSize);
-		params.leftMargin = margin;
-		params.rightMargin = margin;
+            } else {
+                v.setVisibility(VISIBLE);
+                animateViewScale(v, state);
+            }
 
-		addView(view, params);
-	}
+        }
+    }
 
-	private void animateViewScale(@Nullable View view, float scale) {
-		if (view == null) {
-			return;
-		}
+    private void createIndicators(int indicatorSize, int margin) {
+        removeAllViews();
 
-		view.animate()
-				.scaleX(scale)
-				.scaleY(scale);
-	}
+        if (mIndicatorCount <= 1) {
+            return;
+        }
+
+        for (int i = 0; i < mIndicatorCount; i++) {
+            addIndicator(mIndicatorCount > MAX_INDICATORS, indicatorSize, margin);
+        }
+    }
+
+    private void addIndicator(boolean isOverflowState, int indicatorSize, int margin) {
+        View view = new View(getContext());
+        view.setBackground(getDotDrawable());
+        if (isOverflowState) {
+            animateViewScale(view, STATE_SMALLEST);
+        } else {
+            animateViewScale(view, STATE_NORMAL);
+        }
+
+        MarginLayoutParams params = new MarginLayoutParams(indicatorSize, indicatorSize);
+        params.leftMargin = margin;
+        params.rightMargin = margin;
+
+        addView(view, params);
+    }
+
+    private Drawable getDotDrawable() {
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.OVAL);
+        drawable.setColor(dotFillColor);
+        drawable.setStroke(Util.dpToPx(0.5d), dotStrokeColor);
+
+        return drawable;
+    }
+
+    private void animateViewScale(@Nullable View view, float scale) {
+        if (view == null) {
+            return;
+        }
+
+        view.animate()
+                .scaleX(scale)
+                .scaleY(scale);
+    }
 
 }
