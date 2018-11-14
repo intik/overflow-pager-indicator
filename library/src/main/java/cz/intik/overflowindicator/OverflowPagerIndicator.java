@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.transition.ChangeBounds;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.transition.TransitionManager;
-import android.transition.TransitionSet;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
+
+import com.transitionseverywhere.ChangeBounds;
+import com.transitionseverywhere.Fade;
+import com.transitionseverywhere.Transition;
+import com.transitionseverywhere.TransitionManager;
+import com.transitionseverywhere.TransitionSet;
 
 import java.util.Arrays;
 
@@ -33,15 +34,15 @@ import androidx.recyclerview.widget.RecyclerView;
  * created 07.06.2017.
  */
 public class OverflowPagerIndicator extends LinearLayout {
-    private static final int MAX_INDICATORS = 9;
-    private static final int INDICATOR_SIZE_DIP = 12;
+    private static final int MAX_INDICATORS       = 9;
+    private static final int INDICATOR_SIZE_DIP   = 12;
     private static final int INDICATOR_MARGIN_DIP = 2;
 
     // State also represents indicator scale factor
-    private static final float STATE_GONE = 0;
+    private static final float STATE_GONE     = 0;
     private static final float STATE_SMALLEST = 0.2f;
-    private static final float STATE_SMALL = 0.4f;
-    private static final float STATE_NORMAL = 0.6f;
+    private static final float STATE_SMALL    = 0.4f;
+    private static final float STATE_NORMAL   = 0.6f;
     private static final float STATE_SELECTED = 1.0f;
 
     private int mIndicatorCount;
@@ -49,7 +50,7 @@ public class OverflowPagerIndicator extends LinearLayout {
     private int mIndicatorSize;
     private int mIndicatorMargin;
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView         mRecyclerView;
     private OverflowDataObserver mDataObserver;
 
     private int dotStrokeColor;
@@ -163,7 +164,7 @@ public class OverflowPagerIndicator extends LinearLayout {
         float[] positionStates = new float[mIndicatorCount + 1];
         Arrays.fill(positionStates, STATE_GONE);
 
-        int start = position - MAX_INDICATORS + 4;
+        int start     = position - MAX_INDICATORS + 4;
         int realStart = Math.max(0, start);
 
         if (realStart + MAX_INDICATORS > mIndicatorCount) {
@@ -199,7 +200,7 @@ public class OverflowPagerIndicator extends LinearLayout {
 
     private void updateIndicators(float[] positionStates) {
         for (int i = 0; i < mIndicatorCount; i++) {
-            View v = getChildAt(i);
+            View  v     = getChildAt(i);
             float state = positionStates[i];
 
             if (state == STATE_GONE) {
