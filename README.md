@@ -54,6 +54,8 @@ Some layout with RecyclerView and OverflowPagerIndicator
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal|bottom"
+      app:dotFillColor="#FF0000"
+      app:dotStrokeColor="#0000FF"
       />
 
 </FrameLayout>
@@ -89,6 +91,18 @@ or even some custom logic which will call:
 OverflowPagerIndicator#onPageSelected(int position)
 ```
 
+### Customization
+
+You can easily change dot fill color and dot stroke color via xml attributes like this:
+```xml
+<cz.intik.overflowindicator.OverflowPagerIndicator
+    app:dotFillColor="#FF0000"
+    app:dotStrokeColor="@color/heavenlyBlue"
+    />
+``` 
+
 ### Changelog
+
+2.0.0 Migrate to AndroidX, add color customization options (big thanks [Javi Chaqués](https://github.com/javichaques))
 
 1.2.1 bugfix (thanks [Sajad Abasi](https://github.com/sajadabasi))
