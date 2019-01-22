@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         overflowPagerIndicator.attachToRecyclerView(recyclerView);
+        overflowPagerIndicator.registerDrawableIndicator(R.drawable.ic_play_circle_outline_black_24dp, 0);
+        overflowPagerIndicator.registerDrawableIndicator(R.drawable.ic_image_black_24dp, 1);
 
         new SimpleSnapHelper(overflowPagerIndicator).attachToRecyclerView(recyclerView);
 
@@ -71,6 +73,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getItemCount() {
             return itemCount;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 1){
+                return 1; //video drawable
+            }
+            else if (position == 3) {
+                return 99; //default getDotDrawable (viewType unknown)
+            }
+            return super.getItemViewType(position);
         }
 
         void updateItemCount(int newCount) {
