@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,7 +18,10 @@ import com.transitionseverywhere.TransitionManager;
 import com.transitionseverywhere.TransitionSet;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -53,6 +57,7 @@ public class OverflowPagerIndicator extends LinearLayout {
     private RecyclerView         mRecyclerView;
     private OverflowDataObserver mDataObserver;
 
+    private SparseIntArray mapDrawablesIndicator = new SparseIntArray();
     private int dotStrokeColor;
     private int dotFillColor;
 
@@ -122,6 +127,10 @@ public class OverflowPagerIndicator extends LinearLayout {
         initIndicators();
     }
 
+    public void registerDrawableIndicator(@DrawableRes Integer imageRes, int viewType) {
+        mapDrawablesIndicator.put(viewType, imageRes);
+    }
+
     void updateIndicatorsCount() {
         if (mIndicatorCount != mRecyclerView.getAdapter().getItemCount()) {
             initIndicators();
@@ -164,7 +173,7 @@ public class OverflowPagerIndicator extends LinearLayout {
         float[] positionStates = new float[mIndicatorCount + 1];
         Arrays.fill(positionStates, STATE_GONE);
 
-        int start     = position - MAX_INDICATORS + 4;
+        int start = position - MAX_INDICATORS + 4;
         int realStart = Math.max(0, start);
 
         if (realStart + MAX_INDICATORS > mIndicatorCount) {
@@ -200,7 +209,7 @@ public class OverflowPagerIndicator extends LinearLayout {
 
     private void updateIndicators(float[] positionStates) {
         for (int i = 0; i < mIndicatorCount; i++) {
-            View  v     = getChildAt(i);
+            View v = getChildAt(i);
             float state = positionStates[i];
 
             if (state == STATE_GONE) {
@@ -222,13 +231,23 @@ public class OverflowPagerIndicator extends LinearLayout {
         }
 
         for (int i = 0; i < mIndicatorCount; i++) {
-            addIndicator(mIndicatorCount > MAX_INDICATORS, indicatorSize, margin);
+            addIndicator(mIndicatorCount > MAX_INDICATORS, indicatorSize, margin, i);
         }
     }
 
-    private void addIndicator(boolean isOverflowState, int indicatorSize, int margin) {
+    private void addIndicator(boolean isOverflowState, int indicatorSize, int margin, int position) {
         View view = new View(getContext());
-        view.setBackground(getDotDrawable());
+        int viewType = -1;
+        if (mRecyclerView.getAdapter() != null){
+            viewType = mRecyclerView.getAdapter().getItemViewType(position);
+        }
+
+        if (mapDrawablesIndicator.indexOfKey(viewType) > -1) {
+            int res = mapDrawablesIndicator.get(viewType);
+            view.setBackground(ContextCompat.getDrawable(getContext(), res));
+        }else {
+            view.setBackground(getDotDrawable());
+        }
         if (isOverflowState) {
             animateViewScale(view, STATE_SMALLEST);
         } else {
