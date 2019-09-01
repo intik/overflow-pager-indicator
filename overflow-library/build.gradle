@@ -2,24 +2,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 
-ext {
-    PUBLISH_GROUP_ID = 'cz.intik.overflowpagerindicator'
-    PUBLISH_ARTIFACT_ID = 'overflow-pager-indicator'
-    PUBLISH_VERSION = '3.0.0'
-}
-
 android {
     compileSdkVersion 28
-
-    compileOptions {
-        kotlinOptions.freeCompilerArgs += ['-module-name', "$PUBLISH_GROUP_ID.$PUBLISH_ARTIFACT_ID"]
-    }
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 28
         versionCode 3
-        versionName PUBLISH_VERSION
+        versionName "3.0.1"
     }
     buildTypes {
         release {

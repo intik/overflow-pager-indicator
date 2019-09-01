@@ -10,7 +10,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 3
-        versionName "3.0.0"
+        versionName "3.0.1"
     }
 
     buildTypes {
@@ -30,6 +30,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.0.2"
     implementation "androidx.recyclerview:recyclerview:1.0.0"
 
-    implementation project(path: ':library')
+    implementation project(path: ':overflow-library')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

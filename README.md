@@ -48,7 +48,7 @@ buildscript {
 In you module gradle add dependency to library:
 
 ```gradle
-implementation "cz.intik:overflow-pager-indicator:$latestVersion"
+implementation "cz.intik:overflow-pager-indicator:$latestVersion" // 3.0.1
 ```
 
 ### Layout
@@ -121,7 +121,7 @@ You can easily change dot fill color and dot stroke color via xml attributes lik
 
 ### Changelog
 
-3.0.0 Remove library from Bintray, use simply Jitpack. Convert library to Kotlin and update to TransitionsEverywhere 2.0 (which uses androidx.transition.X heavily)
+3.0.1 Remove library from Bintray, use simply Jitpack. Convert library to Kotlin and update to TransitionsEverywhere 2.0 (which uses androidx.transition.X heavily)
 
 2.0.0 Migrate to AndroidX, add color customization options (big thanks [Javi Chaqués](https://github.com/javichaques))
 
