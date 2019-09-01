@@ -25,12 +25,30 @@ _Disclaimer: Having too many pages in recycler means that user needs to swipe a 
  
 ## Usage
 
+### Migration to 3.0 from 2.x
+
+Make sure you have Jitpack dependency in root gradle file.
+
+Follow [this instructions](https://github.com/andkulikov/Transitions-Everywhere#migration-from-1x-guide) to update
+TransitionsEverywhere which migrated to Jetpack androidx.transition to prevent import crashes.
+
 ### Gradle dependency
 
-In your gradle add dependency:
+In your root gradle add dependency to Jitpack:
 
 ```gradle
-compile "cz.intik:overflow-pager-indicator:$latestVersion"
+buildscript {
+    repositories {
+        xxx
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+In you module gradle add dependency to library:
+
+```gradle
+implementation "cz.intik:overflow-pager-indicator:$latestVersion"
 ```
 
 ### Layout
@@ -102,6 +120,8 @@ You can easily change dot fill color and dot stroke color via xml attributes lik
 ``` 
 
 ### Changelog
+
+3.0.0 Remove library from Bintray, use simply Jitpack. Convert library to Kotlin and update to TransitionsEverywhere 2.0 (which uses androidx.transition.X heavily)
 
 2.0.0 Migrate to AndroidX, add color customization options (big thanks [Javi Chaqués](https://github.com/javichaques))
 
