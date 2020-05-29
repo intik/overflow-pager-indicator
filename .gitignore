@@ -6,7 +6,3 @@
 /build
 /captures
 .externalNativeBuild
-gradlew.bat
-gradlew
-gradle/
-gradle.properties
