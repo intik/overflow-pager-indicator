@@ -2,7 +2,7 @@
 
 [![Download](https://jitpack.io/v/intik/overflow-pager-indicator.svg)](https://jitpack.io/#intik/overflow-pager-indicator)
 [![](https://jitci.com/gh/intik/overflow-pager-indicator/svg)](https://jitci.com/gh/intik/overflow-pager-indicator)
-[![license](https://img.shields.io/badge/license-MIT%20license-blue.svg)](https://github.com/intik/overflow-pager-indicator/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT%20license-blue.svg)](LICENSE)
 
 Simple widget for recycler view - displaying dots indicators of currently selected page - 
 with some fancy animation when dataset is large.
@@ -62,14 +62,14 @@ Some layout with RecyclerView and OverflowPagerIndicator
    android:layout_height="wrap_content"
    >
 
-   <android.support.v7.widget.RecyclerView
-      android:id="@+id/recycler_view"
+   <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/recyclerView"
       android:layout_width="match_parent"
       android:layout_height="120dp"
       />
 
    <cz.intik.overflowindicator.OverflowPagerIndicator
-      android:id="@+id/view_pager_indicator"
+      android:id="@+id/viewOverflowPagerIndicator"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal|bottom"
@@ -83,31 +83,31 @@ Some layout with RecyclerView and OverflowPagerIndicator
 ### Code
 
 Attach
-[OverflowPagerIndicator](https://github.com/intik/overflow-pager-indicator/blob/docs-update/library/src/main/java/cz/intik/overflowindicator/OverflowPagerIndicator.java)
+[OverflowPagerIndicator](overflow-library/src/main/java/cz/intik/overflowindicator/OverflowPagerIndicator.kt)
 (usually after LayoutManager and Adapter setup) to
-[RecyclerView](https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html)
-\- for listening to dataset changes
+[RecyclerView](https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView)
+\- for listening to dataset changes:
 
-```java
-overflowPagerIndicator.attachToRecyclerView(recyclerView);
+```kotlin
+viewOverflowPagerIndicator.attachToRecyclerView(recyclerView)
 ```
 
 Attach
-[SimpleSnapHelper](https://github.com/intik/overflow-pager-indicator/blob/docs-update/library/src/main/java/cz/intik/overflowindicator/SimpleSnapHelper.java)
+[SimpleSnapHelper](overflow-library/src/main/java/cz/intik/overflowindicator/SimpleSnapHelper.kt)
 to recycler view which will change selected page in indicator view as items in recycler 
-view are snapped
+view are snapped:
 
-```java  
-SimpleSnapHelper snapHelper = new SimpleSnapHelper(overflowPagerIndicator);
-snapHelper.attachToRecyclerView(recyclerView);
+```kotlin
+val snapHelper = SimpleSnapHelper(viewOverflowPagerIndicator)
+snapHelper.attachToRecyclerView(recyclerView)
 ```
 
 Or use any other implementation of
-[PagerSnapHelper](https://developer.android.com/reference/android/support/v7/widget/PagerSnapHelper.html "Android Developers - docs - PagerSnapHelper")
+[PagerSnapHelper](https://developer.android.com/reference/androidx/recyclerview/widget/PagerSnapHelper "Android Developers - docs - PagerSnapHelper")
 or even some custom logic which will call:
 
-```java
-OverflowPagerIndicator#onPageSelected(int position)
+```kotlin
+viewOverflowPagerIndicator.onPageSelected(position)
 ```
 
 ### Customization
