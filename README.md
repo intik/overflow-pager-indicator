@@ -1,6 +1,7 @@
 # Overflow Pager Indicator widget
 
 [![Download](https://jitpack.io/v/intik/overflow-pager-indicator.svg)](https://jitpack.io/#intik/overflow-pager-indicator)
+[![](https://jitci.com/gh/intik/overflow-pager-indicator/svg)](https://jitci.com/gh/intik/overflow-pager-indicator)
 [![license](https://img.shields.io/badge/license-MIT%20license-blue.svg)](https://github.com/intik/overflow-pager-indicator/blob/master/LICENSE)
 
 Simple widget for recycler view - displaying dots indicators of currently selected page - 
