@@ -29,4 +29,8 @@ dependencies {
 
     implementation "com.andkulikov:transitionseverywhere:2.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    testImplementation "androidx.test.ext:junit:1.1.1"
+    testImplementation "androidx.test:core:1.2.0"
+    testImplementation "io.mockk:mockk:1.10.0"
 }
