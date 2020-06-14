@@ -20,11 +20,15 @@ behavior of classic ViewPager
 
 | :heavy_check_mark: Overflowed indicators | :x: Classic confusing indicators |
 | ----------------------- | ------------------------------- |
-| ![Widget effect animation preview](docs/images/overflow-pager-indicator.gif "Preview of widget effect of animating dots during pages swiping")  | ![Classic ](docs/images/classic-indicators.png "Fujky")  |
+| ![Widget effect animation preview](docs/images/overflow-pager-indicator.gif "Preview of widget effect of animating dots during pages swiping")  | ![Classic ](docs/images/classic-indicators.png "Confusing")  |
  
 _Disclaimer: Having too many pages in recycler means that user needs to swipe a lot. Different layout/ui may be more user friendly._ 
  
 ## Usage
+
+### Migration to 3.1 from 3.0
+
+`dotFillColor` and `dotStrokeColor` were renamed to `indicatorFillColor` and `indicatorStrokeColor`
 
 ### Migration to 3.0 from 2.x
 
@@ -49,7 +53,7 @@ buildscript {
 In you module gradle add dependency to library:
 
 ```gradle
-implementation "cz.intik:overflow-pager-indicator:$latestVersion" // 3.0.1
+implementation "cz.intik:overflow-pager-indicator:$latestVersion" // 3.1.0
 ```
 
 ### Layout
@@ -73,8 +77,8 @@ Some layout with RecyclerView and OverflowPagerIndicator
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal|bottom"
-      app:dotFillColor="#FF0000"
-      app:dotStrokeColor="#0000FF"
+      app:indicatorFillColor="#FF0000"
+      app:indicatorStrokeColor="#0000FF"
       />
 
 </FrameLayout>
@@ -115,12 +119,16 @@ viewOverflowPagerIndicator.onPageSelected(position)
 You can easily change dot fill color and dot stroke color via xml attributes like this:
 ```xml
 <cz.intik.overflowindicator.OverflowPagerIndicator
-    app:dotFillColor="#FF0000"
-    app:dotStrokeColor="@color/heavenlyBlue"
+    app:indicatorFillColor="#FF0000"
+    app:indicatorStrokeColor="@color/heavenlyBlue"
+    app:indicatorMargin="6dp"
+    app:indicatorSize="22dp"
     />
 ``` 
 
 ### Changelog
+
+3.1.0 Add customization of indicator size and margin. Unify naming of attributes to "indicatorXxx" instead of "dotXxx"
 
 3.0.1 Remove library from Bintray, use simply Jitpack. Convert library to Kotlin and update to TransitionsEverywhere 2.0 (which uses androidx.transition.X heavily)
 

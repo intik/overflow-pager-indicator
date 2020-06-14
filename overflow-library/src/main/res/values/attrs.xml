@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="OverflowPagerIndicator">
-        <attr name="dotFillColor" format="color"/>
-        <attr name="dotStrokeColor" format="color"/>
+        <attr name="indicatorFillColor" format="color"/>
+        <attr name="indicatorStrokeColor" format="color"/>
         <attr name="indicatorSize" format="dimension" />
         <attr name="indicatorMargin" format="dimension" />
     </declare-styleable>

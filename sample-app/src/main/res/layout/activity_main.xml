@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dot_stroke"
+    android:background="@color/indicatorStroke"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -40,8 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:dotFillColor="@color/colorAccent"
-            app:dotStrokeColor="#0000FF" />
+            app:indicatorFillColor="@color/colorAccent"
+            app:indicatorStrokeColor="#0000FF" />
     </FrameLayout>
 
     <FrameLayout

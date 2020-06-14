@@ -4,8 +4,8 @@
 
 	<stroke
 		android:width="0.5dp"
-		android:color="@color/dot_stroke"/>
+		android:color="@color/indicatorStroke"/>
 
-	<solid android:color="@color/dot_fill"/>
+	<solid android:color="@color/indicatorFill"/>
 
 </shape>

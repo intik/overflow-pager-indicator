@@ -34,10 +34,10 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
     var indicatorMargin: Int = -1
         private set
 
-    var dotStrokeColor: Int = -1
+    var indicatorStrokeColor: Int = -1
         private set
 
-    var dotFillColor: Int = -1
+    var indicatorFillColor: Int = -1
         private set
 
     private val dataObserver: OverflowDataObserver
@@ -45,11 +45,11 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
     private var lastSelected: Int = 0
     private var recyclerView: RecyclerView? = null
 
-    private val dotDrawable: Drawable
+    private val indicatorDrawable: Drawable
         get() = GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setColor(dotFillColor)
-            setStroke(Util.dpToPx(0.5), dotStrokeColor)
+            setColor(indicatorFillColor)
+            setStroke(Util.dpToPx(0.5), indicatorStrokeColor)
         }
 
     init {
@@ -59,8 +59,8 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
     }
 
     private fun initAttrs(context: Context, attrs: AttributeSet?) {
-        dotFillColor = ContextCompat.getColor(context, R.color.dot_fill)
-        dotStrokeColor = ContextCompat.getColor(context, R.color.dot_stroke)
+        indicatorFillColor = ContextCompat.getColor(context, R.color.indicatorFill)
+        indicatorStrokeColor = ContextCompat.getColor(context, R.color.indicatorStroke)
         indicatorSize = context.resources.getDimensionPixelSize(R.dimen.indicator_size)
         indicatorMargin = context.resources.getDimensionPixelSize(R.dimen.indicator_margin)
 
@@ -70,11 +70,11 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
             context.obtainStyledAttributes(attrs, R.styleable.OverflowPagerIndicator)
 
         try {
-            dotFillColor = attributeArray
-                .getColor(R.styleable.OverflowPagerIndicator_dotFillColor, dotFillColor)
+            indicatorFillColor = attributeArray
+                .getColor(R.styleable.OverflowPagerIndicator_indicatorFillColor, indicatorFillColor)
 
-            dotStrokeColor = attributeArray
-                .getColor(R.styleable.OverflowPagerIndicator_dotStrokeColor, dotStrokeColor)
+            indicatorStrokeColor = attributeArray
+                .getColor(R.styleable.OverflowPagerIndicator_indicatorStrokeColor, indicatorStrokeColor)
 
             indicatorSize = attributeArray
                 .getDimensionPixelSize(
@@ -216,7 +216,7 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
 
     private fun addIndicator(isOverflowState: Boolean, indicatorSize: Int, margin: Int) {
         val view = View(context)
-        view.background = dotDrawable
+        view.background = indicatorDrawable
 
         animateViewScale(view, if (isOverflowState) STATE_SMALLEST else STATE_NORMAL)
 
