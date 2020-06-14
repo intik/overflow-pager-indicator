@@ -3,5 +3,7 @@
     <declare-styleable name="OverflowPagerIndicator">
         <attr name="dotFillColor" format="color"/>
         <attr name="dotStrokeColor" format="color"/>
+        <attr name="indicatorSize" format="dimension" />
+        <attr name="indicatorMargin" format="dimension" />
     </declare-styleable>
 </resources>

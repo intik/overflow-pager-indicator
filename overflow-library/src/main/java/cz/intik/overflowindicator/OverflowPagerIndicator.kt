@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -29,16 +28,22 @@ import kotlin.math.max
  */
 class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
+    var indicatorSize: Int = -1
+        private set
+
+    var indicatorMargin: Int = -1
+        private set
+
+    var dotStrokeColor: Int = -1
+        private set
+
+    var dotFillColor: Int = -1
+        private set
+
+    private val dataObserver: OverflowDataObserver
     private var indicatorCount: Int = 0
     private var lastSelected: Int = 0
-    private val indicatorSize: Int
-    private val indicatorMargin: Int
-
     private var recyclerView: RecyclerView? = null
-    private val dataObserver: OverflowDataObserver
-
-    private var dotStrokeColor: Int = 0
-    private var dotFillColor: Int = 0
 
     private val dotDrawable: Drawable
         get() = GradientDrawable().apply {
@@ -50,43 +55,38 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
     init {
         initAttrs(context, attrs)
 
-        val dm = resources.displayMetrics
-        indicatorSize = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, INDICATOR_SIZE_DIP.toFloat(), dm
-        ).toInt()
-
-        indicatorMargin = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP, INDICATOR_MARGIN_DIP.toFloat(), dm
-        ).toInt()
-
         dataObserver = OverflowDataObserver(this)
     }
 
     private fun initAttrs(context: Context, attrs: AttributeSet?) {
         dotFillColor = ContextCompat.getColor(context, R.color.dot_fill)
         dotStrokeColor = ContextCompat.getColor(context, R.color.dot_stroke)
+        indicatorSize = context.resources.getDimensionPixelSize(R.dimen.indicator_size)
+        indicatorMargin = context.resources.getDimensionPixelSize(R.dimen.indicator_margin)
 
-        if (attrs != null) {
-            val attributeArray =
-                context.obtainStyledAttributes(attrs, R.styleable.OverflowPagerIndicator)
+        if (attrs == null) return
 
-            if (attributeArray != null) {
-                if (attributeArray.hasValue(R.styleable.OverflowPagerIndicator_dotFillColor)) {
-                    dotFillColor = attributeArray.getColor(
-                        R.styleable.OverflowPagerIndicator_dotFillColor,
-                        dotFillColor
-                    )
-                }
+        val attributeArray =
+            context.obtainStyledAttributes(attrs, R.styleable.OverflowPagerIndicator)
 
-                if (attributeArray.hasValue(R.styleable.OverflowPagerIndicator_dotStrokeColor)) {
-                    dotStrokeColor = attributeArray.getColor(
-                        R.styleable.OverflowPagerIndicator_dotStrokeColor,
-                        dotStrokeColor
-                    )
-                }
+        try {
+            dotFillColor = attributeArray
+                .getColor(R.styleable.OverflowPagerIndicator_dotFillColor, dotFillColor)
 
-                attributeArray.recycle()
-            }
+            dotStrokeColor = attributeArray
+                .getColor(R.styleable.OverflowPagerIndicator_dotStrokeColor, dotStrokeColor)
+
+            indicatorSize = attributeArray
+                .getDimensionPixelSize(
+                    R.styleable.OverflowPagerIndicator_indicatorSize, indicatorSize
+                )
+
+            indicatorMargin = attributeArray
+                .getDimensionPixelSize(
+                    R.styleable.OverflowPagerIndicator_indicatorMargin, indicatorMargin
+                )
+        } finally {
+            attributeArray.recycle()
         }
     }
 
@@ -237,16 +237,14 @@ class OverflowPagerIndicator(context: Context, attrs: AttributeSet) : LinearLayo
     }
 
     companion object {
-        private const val MAX_INDICATORS = 9
-        private const val INDICATOR_SIZE_DIP = 12
-        private const val INDICATOR_MARGIN_DIP = 2
+        const val MAX_INDICATORS = 9
 
         // State also represents indicator scale factor
-        private const val STATE_GONE = 0f
-        private const val STATE_SMALLEST = 0.2f
-        private const val STATE_SMALL = 0.4f
-        private const val STATE_NORMAL = 0.6f
-        private const val STATE_SELECTED = 1.0f
+        const val STATE_GONE = 0f
+        const val STATE_SMALLEST = 0.2f
+        const val STATE_SMALL = 0.4f
+        const val STATE_NORMAL = 0.6f
+        const val STATE_SELECTED = 1.0f
     }
 
 }
