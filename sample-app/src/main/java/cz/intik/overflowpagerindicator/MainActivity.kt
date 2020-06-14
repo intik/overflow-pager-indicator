@@ -17,22 +17,29 @@ import cz.intik.overflowindicator.SimpleSnapHelper
  */
 class MainActivity : AppCompatActivity() {
 
+    data class Data(
+        val recyclerViewId: Int,
+        val indicatorViewId: Int,
+        val itemCount: Int,
+        val delay: Long
+    )
+
+    private val data = listOf(
+        Data(R.id.recyclerView, R.id.viewPagerIndicator, 20, 500L),
+        Data(R.id.recyclerViewColors, R.id.viewPagerIndicatorColors, 9, 1_000L),
+        Data(R.id.recyclerViewSizes, R.id.viewPagerIndicatorSizes, 5, 2_000L)
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initRecyclerWithIndicator(R.id.recycler_view, R.id.view_pager_indicator, 20, 1000)
-        initRecyclerWithIndicator(
-            R.id.recycler_view_simple, R.id.view_pager_indicator_simple, 5, 2000
-        )
+        data.forEach(::initRecyclerWithIndicator)
     }
 
-    private fun initRecyclerWithIndicator(
-        recyclerViewId: Int,
-        indicatorViewId: Int,
-        itemCount: Int,
-        delay: Int
-    ) {
+    private fun initRecyclerWithIndicator(data: Data) {
+        val (recyclerViewId, indicatorViewId, itemCount, delay) = data
+
         val recyclerView = findViewById<RecyclerView>(recyclerViewId)
         val overflowPagerIndicator = findViewById<OverflowPagerIndicator>(indicatorViewId)
         val adapter = Adapter()
@@ -45,13 +52,15 @@ class MainActivity : AppCompatActivity() {
 
         SimpleSnapHelper(overflowPagerIndicator).attachToRecyclerView(recyclerView)
 
-        recyclerView.postDelayed({ adapter.updateItemCount(itemCount) }, delay.toLong())
+        recyclerView.postDelayed({ adapter.updateItemCount(itemCount) }, delay)
     }
 
     private class Adapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         // Some material colors for recycler view items background
         private val colors =
-            arrayOf("#2196F3", "#00BCD4", "#4CAF50", "#CDDC39", "#FFC107", "#FF5722")
+            mutableListOf("#2196F3", "#00BCD4", "#4CAF50", "#CDDC39", "#FFC107", "#FF5722")
+                .apply { shuffle() }
+
         private var itemCount = 0
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/dot_stroke"
-              android:orientation="vertical"
-              tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dot_stroke"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp">
+        android:layout_marginTop="32dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="120dp"/>
+            android:layout_height="100dp" />
 
         <cz.intik.overflowindicator.OverflowPagerIndicator
-            android:id="@+id/view_pager_indicator"
+            android:id="@+id/viewPagerIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="64dp">
+        android:layout_marginTop="32dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_simple"
+            android:id="@+id/recyclerViewColors"
             android:layout_width="match_parent"
-            android:layout_height="120dp"/>
+            android:layout_height="100dp" />
 
         <cz.intik.overflowindicator.OverflowPagerIndicator
-            android:id="@+id/view_pager_indicator_simple"
+            android:id="@+id/viewPagerIndicatorColors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:dotFillColor="@color/colorAccent"
-            app:dotStrokeColor="#0000FF"
-            />
+            app:dotStrokeColor="#0000FF" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSizes"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <cz.intik.overflowindicator.OverflowPagerIndicator
+            android:id="@+id/viewPagerIndicatorSizes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:indicatorMargin="6dp"
+            app:indicatorSize="22dp" />
     </FrameLayout>
 
 </LinearLayout>
