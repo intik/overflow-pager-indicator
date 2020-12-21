@@ -44,7 +44,7 @@ In your root gradle add dependency to Jitpack:
 ```gradle
 buildscript {
     repositories {
-        xxx
+        ...
         maven { url 'https://jitpack.io' }
     }
 }
@@ -53,7 +53,8 @@ buildscript {
 In you module gradle add dependency to library:
 
 ```gradle
-implementation "cz.intik:overflow-pager-indicator:$latestVersion" // 3.1.0
+implementation 'com.github.intik:overflow-pager-indicator:3.1.0'
+
 ```
 
 ### Layout
